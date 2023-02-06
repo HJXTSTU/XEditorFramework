@@ -18,14 +18,15 @@ namespace XEditorFramework.XEditorUtility
                 return false;
 
             ParameterInfo[] inMethodParamInfos = inMethodInfo.GetParameters();
-            if(typeof(EditorMessageParams).IsAssignableFrom(inMethodParamInfos[1].ParameterType))
+            if (typeof(EditorMessageParams) != inMethodParamInfos[1].ParameterType)
             {
                 return false;
             }
             return true;
         }
 
-        public static void BindEvents(object _this, EventChanel inEventChanel) {
+        public static void BindEvents(object _this, EventChanel inEventChanel)
+        {
             MethodInfo[] methods = _this.GetType().GetMethods(BindingFlags.Instance | BindingFlags.Public);
             foreach (MethodInfo method in methods)
             {
@@ -34,10 +35,29 @@ namespace XEditorFramework.XEditorUtility
                 {
                     if (Utility.IsEventCallback(method))
                     {
-                        if(bindInfo.BindingType == BindType.BIND_MODEL_EVENT)
-                            inEventChanel.RegisterModelEvent(bindInfo.EventType, (EventCallback)Delegate.CreateDelegate(typeof(EventCallback), method));
-                        else if(bindInfo.BindingType == BindType.BIND_VIEW_EVENT)
-                            inEventChanel.RegisterViewEvent(bindInfo.EventType, (EventCallback)Delegate.CreateDelegate(typeof(EventCallback), method));
+                        if (bindInfo.BindingType == BindType.BIND_MODEL_EVENT)
+                            inEventChanel.RegisterModelEvent(bindInfo.EventType, (Action<object, EditorMessageParams>)method.CreateDelegate(typeof(Action<object, EditorMessageParams>), _this));
+                        else if (bindInfo.BindingType == BindType.BIND_VIEW_EVENT)
+                            inEventChanel.RegisterViewEvent(bindInfo.EventType, (Action<object, EditorMessageParams>)method.CreateDelegate(typeof(Action<object, EditorMessageParams>), _this));
+                    }
+                }
+            }
+        }
+
+        public static void UnBindEvents(object _this, EventChanel inEventChanel)
+        {
+            MethodInfo[] methods = _this.GetType().GetMethods(BindingFlags.Instance | BindingFlags.Public);
+            foreach (MethodInfo method in methods)
+            {
+                Bind[] bindInfos = (Bind[])method.GetCustomAttributes<Bind>();
+                foreach (Bind bindInfo in bindInfos)
+                {
+                    if (Utility.IsEventCallback(method))
+                    {
+                        if (bindInfo.BindingType == BindType.BIND_MODEL_EVENT)
+                            inEventChanel.RemoveModelEvent(bindInfo.EventType, (Action<object, EditorMessageParams>)method.CreateDelegate(typeof(Action<object, EditorMessageParams>), _this));
+                        else if (bindInfo.BindingType == BindType.BIND_VIEW_EVENT)
+                            inEventChanel.RemoveViewEvent(bindInfo.EventType, (Action<object, EditorMessageParams>)method.CreateDelegate(typeof(Action<object, EditorMessageParams>), _this));
                     }
                 }
             }

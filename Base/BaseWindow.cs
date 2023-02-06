@@ -10,9 +10,9 @@ namespace XEditorFramework.Base
 {
     public class BaseWindow : EditorWindow
     {
-        private EventChanel m_EventChanel;
+        protected EventChanel m_EventChanel;
 
-        private Stack<BaseView> m_Views;
+        protected Stack<BaseView> m_Views;
 
         protected virtual void Awake()
         {

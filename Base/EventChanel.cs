@@ -24,27 +24,27 @@ namespace XEditorFramework.Base{
             }
         }
 
-        public void RegisterModelEvent(string inEventType, EventCallback inCallback) {
+        public void RegisterModelEvent(string inEventType, Action<object, EditorMessageParams> inCallback) {
             if(!m_ModelEvents.ContainsKey(inEventType)){
                 m_ModelEvents.Add(inEventType, new EditorActionEvent());
             }
             m_ModelEvents[inEventType].AddListener(inCallback);
         }
 
-        public void RegisterViewEvent(string inEventType, EventCallback inCallback) {
+        public void RegisterViewEvent(string inEventType, Action<object, EditorMessageParams> inCallback) {
             if(!m_ViewEvents.ContainsKey(inEventType)) {
                 m_ViewEvents.Add(inEventType, new EditorActionEvent());
             }
             m_ViewEvents[inEventType].AddListener(inCallback);
         }
 
-        public void RemoveModelEvent(string inEventType, EventCallback inCallback) {
+        public void RemoveModelEvent(string inEventType, Action<object, EditorMessageParams> inCallback) {
             if(m_ModelEvents.ContainsKey(inEventType)){
                 m_ModelEvents[inEventType].RemoveListeners(inCallback);
             }
         }
 
-        public void RemoveViewEvent(string inEventType, EventCallback inCallback) {
+        public void RemoveViewEvent(string inEventType, Action<object, EditorMessageParams> inCallback) {
             if(m_ViewEvents.ContainsKey(inEventType)) {
                 m_ViewEvents[inEventType].RemoveListeners(inCallback);
             }
