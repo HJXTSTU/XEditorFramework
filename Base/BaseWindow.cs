@@ -38,7 +38,7 @@ namespace XEditorFramework.Base
             SwitchView(constructorInfo.Invoke(new object[] { m_EventChanel }) as BaseView);
         }
 
-        protected void SwitchView(BaseView inView)
+        public void SwitchView(BaseView inView)
         {
             if (m_Views.Count > 0)
             {
@@ -48,7 +48,7 @@ namespace XEditorFramework.Base
             m_Views.Push(inView);
         }
 
-        protected void PopView()
+        public void PopView()
         {
             m_Views.Peek().OnExit();
             m_Views.Pop();
@@ -68,7 +68,10 @@ namespace XEditorFramework.Base
 
         protected void OnDestroy()
         {
-            // Debug.Log("[XEditorFramework Base Window OnDestroy]");
+            while (m_Views.Count > 0)
+            {
+                PopView();
+            }
         }
     }
 }

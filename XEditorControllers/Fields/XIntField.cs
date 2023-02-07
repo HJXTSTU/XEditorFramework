@@ -19,6 +19,16 @@ namespace XEditorFramework.XEditorControllers.Fields
             return EditorGUILayout.IntField(inTitle,inValue);
         }
 
+        public int OnPaint(string inTitle, int inValue, Action<int> inIfModifyCallback)
+        {
+            int res = OnPaint(inTitle, inValue);
+            if(res != inValue)
+            {
+                inIfModifyCallback?.Invoke(res);
+            }
+            return res;
+        }
+
         public override void OnPaint()
         {
             throw new NotImplementedException();

@@ -33,6 +33,18 @@ namespace XEditorFramework.XEditorControllers
             }
         }
 
+        public void OnPaint(string[] inDisplayNames, int[] inValues, Action<int> inCallBack)
+        {
+            m_SelectedValue = EditorGUILayout.IntPopup(m_SelectedValue, inDisplayNames, inValues);
+            inCallBack?.Invoke(m_SelectedValue);
+        }
+
+        public void OnPaint(Action<int> inCallBack)
+        {
+            OnPaint();
+            inCallBack?.Invoke(m_SelectedValue);
+        }
+
         public override void OnPaint()
         {
             m_SelectedValue = EditorGUILayout.IntPopup(m_SelectedValue, m_DisplayNames, m_Values);
